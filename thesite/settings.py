@@ -1,7 +1,12 @@
-from pathlib import Path
 from decouple import Config,RepositoryEnv
+from pathlib import Path
+from dotenv import load_dotenv
+import os
 
-config = Config(RepositoryEnv("thesite\.env"))
+load_dotenv('.env')
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -10,16 +15,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY='django-insecure-%(meor*xilsfq*p#f%7-8o0s19w49^47ylr!smer3h&ki)sxav'
+SECRET_KEY: str = os.getenv('SECRET_KEY')
 # config('SECRET_KEY')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG',cast=bool)
+DEBUG=(os.getenv('DEBUG', 'False') == 'True')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-
+CSRF_COOKIE_NAME = 'csrftoken'
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 # Application definition
+
+
+# Add the JWT authentication configuration
+DEFAULT_AUTHENTICATION_CLASSES = [
+    'rest_framework_simplejwt.authentication.JWTAuthentication',
+    'rest_framework.authentication.BasicAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+]
+
+DEFAULT_PERMISSION_CLASSES= [
+        'rest_framework.permissions.IsAuthenticated'
+]
+
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,28 +51,39 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
     'rest_framework',
     'tutorials.apps.TutorialsConfig',
     'customers.apps.CustomersConfig',
     'corsheaders'
 ]
 
-
-CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL',cast=bool)
-CORS_ORIGIN_WHITELIST=config('CORS_ORIGIN_WHITELIST')
-# config('CORS_ORIGIN_WHITELIST')
-
+import ast #parse the environment variable value as a list.
+CORS_ORIGIN_ALLOW_ALL=(os.getenv('CORS_ORIGIN_ALLOW_ALL', 'False') == 'True')
+CORS_ORIGIN_WHITELIST=['http://localhost:5173']
+# ast.literal_eval(os.getenv('CORS_ORIGIN_WHITELIST'))
+CORS_ALLOW_HEADERS = [
+    'X-CSRFTOKEN',
+    # 'X_CSRFTOKEN',
+    'accept',
+    'accept-encoding',
+    'authorization',  # Include 'authorization' in the allowed headers
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-requested-with',
+]
 
 
 MIDDLEWARE = [
+        'django.middleware.csrf.CsrfViewMiddleware',
     # CORS
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -82,13 +116,14 @@ WSGI_APPLICATION = 'thesite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'slingorgapp',
-        'USER': 'postgres',
-        'PASSWORD': 'abc123',
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
 }
 }
+
     
 FORMATTERS = (
     {
@@ -205,5 +240,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-GLOBAL_VAR_X = ''

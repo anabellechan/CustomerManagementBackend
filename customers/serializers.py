@@ -6,7 +6,7 @@ class CustomerSerializer(serializers.ModelSerializer):
  
     class Meta:
         model = Customers
-        fields = ('id',
+        fields = (
                   'customerid',
                   'firstname',
                   'lastname',
@@ -18,8 +18,7 @@ class CustomerSerializer(serializers.ModelSerializer):
                   'email',
                   'subscriptiondate',
                   'website',
-                  'cleanedphone1',
-                  'cleanedphone2')
+                  'filename_index')
         
         
 class CustomerBulkCreateSerializer(serializers.ListSerializer):  
@@ -35,8 +34,7 @@ class CustomerBulkCreateSerializer(serializers.ListSerializer):
 class CustomersBulkSerializer(serializers.ModelSerializer):  
         class Meta:  
             model = Customers
-            fields = ['id',
-                  'customerid',
+            fields = ['customerid',
                   'firstname',
                   'lastname',
                   'company',
@@ -47,7 +45,6 @@ class CustomersBulkSerializer(serializers.ModelSerializer):
                   'email',
                   'subscriptiondate',
                   'website',
-                  'cleanedphone1',
-                  'cleanedphone2']  
-            read_only_fields = ['id']  
+                'filename_index']  
+            # read_only_fields = ['index']  
             list_serializer_class = CustomerBulkCreateSerializer  

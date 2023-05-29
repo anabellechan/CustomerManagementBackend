@@ -2,10 +2,14 @@
 from django.urls import path
 from customers import views 
  
- 
 app_name = "customers"
 
 urlpatterns = [ 
+    # path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path(r'logout', views.logout_view, name='logout'),
+    path(r'my_protected_view', views.my_protected_view, name='my_protected_view'),
+    # path(r'sessions', views.check_sessions, name='sessions'),
+    path(r'login', views.login_view, name='login'),
     path(r'customer', views.customer_list),
     path(r'customercsv', views.customer_listcsv),
     path(r'customer/company', views.company_list),
