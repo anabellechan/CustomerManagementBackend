@@ -1,0 +1,63 @@
+SQL Tables
+
+Customer
+Index
+Customer Id
+First Name
+Last Name
+Company
+City
+Country
+Phone 1
+Phone 2
+Email
+Subscription Date
+Website
+
+People Schema
+Index
+User Id
+First Name
+Last Name
+Sex
+Email
+Phone
+Date of birth
+Job Title
+
+Organization Schema
+Index
+Organization Id
+Name
+Website
+Country
+Description
+Founded
+Industry
+Number of employees
+
+Things to do
+Solve the "" problem ok
+Organizations -> make sure there are no inconsistent data entries e.g the country ok, industries are standardized in the same format (E.g SouthKorea, South Korea) ok
+checked for duplicate rows yes
+Weird words- 4thgeneration, 5thgeneration, 6thgeneration knowledgebase need to change in notepad ++ editor
+People - ph no. + and also the x.... and the fullstops in some of the numbers
+figure out if postgres can import both a mix of quotation and non-quotations
+
+Some analytical notes
+None of the first and last names nor the emails match between the CSV's.
+How should phone numbers be "cleaned"? When there are many different phone formats existing in the current csv
+
+1. Create a cleaned PH data, and the unclean one beside it
+1.1 Test out duplicates again
+2. Use django to import the csv into postgres
+3. Do CRUD using django and postgres
+4. Make a front-end using vue.js
+Prototype - User can upload a csv file and there must be a notif (upload success/ 8/10 imported and also error handling). 
+It *CAN* show the completed file. The simple table must be shown when you type into search bar (e.g Zingapore) and this makes a fuzzy query to the customer table, and then export that filtered dataset out to csv.
+5. create user stories
+
+
+
+
+
